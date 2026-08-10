@@ -6,7 +6,7 @@ Todo está explicado en **lenguaje simple**, cada ajuste muestra su **nivel de r
 
 > ⚠️ **Importante:** Wachin pide permisos de administrador (UAC) para poder aplicar los ajustes. Antes de cambiar cualquier cosa, el programa te recuerda **crear un punto de restauración**.
 
-> 📄 **Documentación completa:** [`DOCUMENTATION.md`](DOCUMENTATION.md) (Markdown) · [`WACHIN-Documentacion.doc`](WACHIN-Documentacion.doc) (Word)
+> 📄 **Documentación completa:**
 
 ---
 
