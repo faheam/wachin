@@ -1,0 +1,62 @@
+<UserControl x:Class="Wachin.Views.SettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="32,24">
+        <StackPanel MaxWidth="700" HorizontalAlignment="Center">
+
+            <!-- Safety -->
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="Seguridad" Style="{StaticResource H3}" Margin="0,0,0,8"/>
+                    <CheckBox x:Name="ConfirmToggle" Content="Preguntar antes de aplicar ajustes de riesgo medio o alto"
+                              IsChecked="True" Checked="OnConfirmChanged" Unchecked="OnConfirmChanged"
+                              Style="{StaticResource Switch}" Margin="0,0,0,6"/>
+                    <CheckBox x:Name="RestoreReminderToggle"
+                              Content="Recordarme crear un punto de restauración antes de aplicar"
+                              IsChecked="True" Checked="OnRestoreReminderChanged" Unchecked="OnRestoreReminderChanged"
+                              Style="{StaticResource Switch}"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Antivirus -->
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="Antivirus y falsos positivos" Style="{StaticResource H3}" Margin="0,0,0,8"/>
+                    <TextBlock Text="Algunos antivirus marcan a Wachin como falso positivo porque modifica el sistema."
+                               Style="{StaticResource Body}" TextWrapping="Wrap" Margin="0,0,0,12"/>
+                    <StackPanel Orientation="Horizontal">
+                        <Button x:Name="ExcludeBtn" Content="Excluir Wachin de Defender"
+                                Style="{StaticResource PrimaryButton}" Click="OnExcludeFromDefender"
+                                Margin="0,0,10,0"/>
+                        <Button Content="Abrir Seguridad de Windows" Style="{StaticResource SecondaryButton}"
+                                Click="OnOpenWindowsSecurity"/>
+                    </StackPanel>
+                    <TextBlock x:Name="ExclusionStatus" Style="{StaticResource Caption}" TextWrapping="Wrap"
+                               Margin="0,10,0,0"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Reset -->
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="Datos" Style="{StaticResource H3}" Margin="0,0,0,8"/>
+                    <Button Content="Restablecer todo el estado de Wachin" Style="{StaticResource DangerButton}"
+                            Click="OnResetState" HorizontalAlignment="Left"/>
+                    <TextBlock Text="Esto borrará todos los ajustes aplicados, el historial y la configuración."
+                               Style="{StaticResource Caption}" Margin="0,6,0,0"/>
+                </StackPanel>
+            </Border>
+
+            <!-- About -->
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="Wachin v1.0.0" Style="{StaticResource H3}" Margin="0,0,0,4"/>
+                    <TextBlock Text="Optimizador de PC gratuito y de código abierto." Style="{StaticResource Body}" Margin="0,0,0,8"/>
+                    <TextBlock Text="MIT License — Hecho con ❤️ para que tu PC se sienta nuevo otra vez."
+                               Style="{StaticResource Caption}" TextWrapping="Wrap"/>
+                </StackPanel>
+            </Border>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

@@ -1,0 +1,12 @@
+bin/
+obj/
+*.user
+.vs/
+publish/
+*.suo
+
+# Seguridad y temporales de verificacion
+*.pfx
+screenshot*.png
+tools/*.ps1
+!tools/make_icon.ps1

@@ -1,0 +1,96 @@
+<UserControl x:Class="Wachin.Views.NotebookView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="32,24">
+        <StackPanel MaxWidth="900" HorizontalAlignment="Center">
+
+            <!-- HEADER -->
+            <Border Style="{StaticResource CardNeon}" Margin="0,0,0,16">
+                <StackPanel>
+                    <TextBlock Text="Notebook · Control de temperatura" Style="{StaticResource Eyebrow}" Margin="0,0,0,6"/>
+                    <TextBlock Text="¿Tu Notebook calienta una banda al exigirla? Pedilo a la mierda"
+                               Style="{StaticResource H1}" TextWrapping="Wrap" Margin="0,0,0,8"/>
+                    <TextBlock Text="Limitá la velocidad máxima del procesador al 99% y tu notebook va a correr mucho más fresca sin que notes la diferencia en juegos. Con un clic lo pedís, con un clic lo devolvés."
+                               Style="{StaticResource Body}" TextWrapping="Wrap"/>
+                </StackPanel>
+            </Border>
+
+            <!-- ESTADO ACTUAL -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="ESTADO ACTUAL" Style="{StaticResource Eyebrow}" VerticalAlignment="Center" Margin="0,0,16,0"/>
+                    <TextBlock x:Name="StatusText" Style="{StaticResource BodyBold}" VerticalAlignment="Center"
+                               Text="Consultando..." Grid.Column="1"/>
+                    <Border Grid.Column="2" CornerRadius="6" Padding="10,4" Background="{DynamicResource BgChip}"
+                            VerticalAlignment="Center">
+                        <TextBlock x:Name="StatusBadge" FontSize="12" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource TextSecondary}" Text="--"/>
+                    </Border>
+                </Grid>
+            </Border>
+
+            <!-- DOS MODOS -->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="14"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Modo Gaming / Frio 99% -->
+                <Border Grid.Column="0" Style="{StaticResource Card}">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                            <Border Width="4" Height="18" CornerRadius="2" Background="{DynamicResource Secondary}"
+                                    VerticalAlignment="Center" Margin="0,0,10,0"/>
+                            <TextBlock Text="MODO GAMING / FRÍO" Style="{StaticResource H3}" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <TextBlock Text="CPU limitada al 99%"
+                                   FontSize="20" FontWeight="Bold" Foreground="{DynamicResource Secondary}" Margin="0,0,0,8"/>
+                        <TextBlock Text="El procesador nunca llega al 100%, así baja la temperatura y el ventilador hace menos ruido. Ideal para jugar o trabajar sin que el notebook se derrita."
+                                   Style="{StaticResource Body}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                        <TextBlock Text="Riesgo: bajo · Reversible con un clic"
+                                   Style="{StaticResource Caption}" Margin="0,0,0,14"/>
+                        <Button x:Name="CoolBtn" Content="¡Lo pido!" Style="{StaticResource PrimaryButton}"
+                                HorizontalAlignment="Stretch" Click="OnApplyCool" FontSize="13"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Modo Rendimiento Normal 100% -->
+                <Border Grid.Column="2" Style="{StaticResource Card}">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                            <Border Width="4" Height="18" CornerRadius="2" Background="{DynamicResource Success}"
+                                    VerticalAlignment="Center" Margin="0,0,10,0"/>
+                            <TextBlock Text="RENDIMIENTO NORMAL" Style="{StaticResource H3}" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <TextBlock Text="CPU al 100%"
+                                   FontSize="20" FontWeight="Bold" Foreground="{DynamicResource Success}" Margin="0,0,0,8"/>
+                        <TextBlock Text="Restaura la velocidad máxima del procesador. Usá este modo cuando necesites todo el poder o ya tengas las temperaturas controladas."
+                                   Style="{StaticResource Body}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                        <TextBlock Text="Riesgo: bajo · Reversible con un clic"
+                                   Style="{StaticResource Caption}" Margin="0,0,0,14"/>
+                        <Button x:Name="FullBtn" Content="¡Lo pido!" Style="{StaticResource SecondaryButton}"
+                                HorizontalAlignment="Stretch" Click="OnApplyFull" FontSize="13"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <!-- AVISO -->
+            <Border Style="{StaticResource Card}" Margin="0,16,0,0">
+                <StackPanel Orientation="Horizontal">
+                    <Border Width="4" Height="16" CornerRadius="2" Background="{DynamicResource RiskMedium}"
+                            VerticalAlignment="Center" Margin="0,0,10,0"/>
+                    <TextBlock Text="Funciona cambiando el valor PROCTHROTTLEMAX del plan de energía activo (powercfg). Solo afecta al plan actual, no necesita reiniciar."
+                               Style="{StaticResource Body}" TextWrapping="Wrap"/>
+                </StackPanel>
+            </Border>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

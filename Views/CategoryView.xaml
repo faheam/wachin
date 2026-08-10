@@ -1,0 +1,88 @@
+<UserControl x:Class="Wachin.Views.CategoryView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:serv="clr-namespace:Wachin.Services">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="32,24">
+        <StackPanel MaxWidth="900" HorizontalAlignment="Center">
+
+            <!-- Category header with progress -->
+            <Border x:Name="HeaderCard" Style="{StaticResource Card}" Margin="0,0,0,16">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0" Margin="0,0,0,6">
+                        <TextBlock x:Name="CatTitle" Style="{StaticResource H2}"/>
+                        <TextBlock x:Name="CatDesc" Style="{StaticResource Body}" TextWrapping="Wrap"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Orientation="Horizontal">
+                        <TextBlock x:Name="ProgressText" Style="{StaticResource BodyBold}" FontSize="13"
+                                   Foreground="{DynamicResource TextSecondary}" Margin="0,0,12,0"
+                                   VerticalAlignment="Center"/>
+                        <Button x:Name="UndoAllBtn" Content="Deshacer todos" Style="{StaticResource DangerButton}"
+                                FontSize="12" Padding="12,6" Click="OnUndoAll" Visibility="Collapsed"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Tweak list -->
+            <ItemsControl x:Name="TweakList">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Style="{StaticResource Card}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Info column -->
+                                <StackPanel Grid.Column="0" Margin="0,0,16,0">
+                                    <TextBlock Text="{Binding Tweak.Title}" Style="{StaticResource BodyBold}"
+                                               FontSize="14.5" Margin="0,0,0,4"/>
+                                    <TextBlock Text="{Binding Tweak.Description}" Style="{StaticResource Body}"
+                                               TextWrapping="Wrap" Margin="0,0,0,8"/>
+
+                                    <!-- Badges row -->
+                                    <WrapPanel>
+                                        <!-- Risk badge -->
+                                        <Border CornerRadius="6" Padding="7,3" Margin="0,0,8,0"
+                                                Background="{Binding Tweak.Risk, Converter={serv:RiskToSoftBrushConverter}}">
+                                            <TextBlock Text="{Binding RiskLabel}" FontSize="11" FontWeight="SemiBold"
+                                                       Foreground="{Binding Tweak.Risk, Converter={serv:RiskToBrushConverter}}"/>
+                                        </Border>
+                                        <!-- Restart badge -->
+                                        <Border x:Name="RestartBadge" CornerRadius="6" Padding="7,3" Margin="0,0,8,0"
+                                                Background="{DynamicResource RiskMediumSoft}" Visibility="Collapsed">
+                                            <TextBlock Text="Requiere reinicio" FontSize="11"
+                                                       Foreground="{DynamicResource RiskMedium}"/>
+                                        </Border>
+                                        <Border x:Name="ExplorerBadge" CornerRadius="6" Padding="7,3" Margin="0,0,8,0"
+                                                Background="{DynamicResource InfoSoft}" Visibility="Collapsed">
+                                            <TextBlock Text="Reiniciar Explorador" FontSize="11"
+                                                       Foreground="{DynamicResource Info}"/>
+                                        </Border>
+                                        <!-- Applied badge -->
+                                        <Border x:Name="AppliedBadge" CornerRadius="6" Padding="7,3"
+                                                Background="{DynamicResource DangerSoft}" Visibility="Collapsed">
+                                            <TextBlock Text="Aplicado" FontSize="11" FontWeight="SemiBold"
+                                                       Foreground="{DynamicResource Danger}"/>
+                                        </Border>
+                                    </WrapPanel>
+                                </StackPanel>
+
+                                <!-- Button column: un solo boton Aplicar/Deshacer -->
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center" MinWidth="90">
+                                    <Button x:Name="ApplyBtn" Content="{Binding ButtonText}"
+                                            Style="{Binding ButtonStyle}"
+                                            Command="{Binding ToggleCommand}" Margin="0,0,0,4"/>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

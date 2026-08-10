@@ -1,0 +1,52 @@
+<Window x:Class="Wachin.Controls.ConfirmDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Confirmar" Width="460" SizeToContent="Height"
+        WindowStartupLocation="CenterOwner" ResizeMode="NoResize"
+        Background="{DynamicResource BgApp}" WindowStyle="SingleBorderWindow"
+        Topmost="True">
+    <Grid Margin="28" Background="{DynamicResource BgApp}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="12"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="8"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="24"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="16"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock x:Name="TitleBlock" Grid.Row="0" Style="{StaticResource H2}"/>
+
+        <TextBlock x:Name="DescBlock" Grid.Row="2" Style="{StaticResource Body}" TextWrapping="Wrap"
+                   MaxWidth="420"/>
+
+        <!-- Risk badge -->
+        <Border x:Name="RiskBadge" Grid.Row="4" HorizontalAlignment="Left"
+                Style="{StaticResource RiskBadge}">
+            <TextBlock x:Name="RiskText" FontSize="12" FontWeight="SemiBold"
+                       FontFamily="{StaticResource AppFont}"/>
+        </Border>
+
+        <!-- Restore point reminder -->
+        <Border x:Name="ReminderBorder" Grid.Row="6" Background="{DynamicResource InfoSoft}"
+                CornerRadius="10" Padding="14,10">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="&#xE7BA;" FontFamily="{StaticResource IconFont}" FontSize="14"
+                           Foreground="{DynamicResource Info}" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                <TextBlock Text="¿Creaste un punto de restauración? Si algo sale mal podrás volver atrás."
+                           Style="{StaticResource Body}" Foreground="{DynamicResource Info}" TextWrapping="Wrap"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Buttons -->
+        <StackPanel Grid.Row="8" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="Cancelar" Style="{StaticResource SecondaryButton}"
+                    Margin="0,0,8,0" MinWidth="90" Click="OnCancel"/>
+            <Button x:Name="ApplyBtn" Content="Aplicar" Style="{StaticResource PrimaryButton}"
+                    MinWidth="110" Click="OnApply"/>
+        </StackPanel>
+    </Grid>
+</Window>

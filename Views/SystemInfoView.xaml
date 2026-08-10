@@ -1,0 +1,102 @@
+<UserControl x:Class="Wachin.Views.SystemInfoView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:Wachin.Services">
+    <Grid Margin="32,24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="12"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <StackPanel Grid.Row="0">
+            <TextBlock Text="Info del sistema" Style="{StaticResource H1}" Margin="0,0,0,4"/>
+            <TextBlock Text="Datos de tu computadora: sistema, CPU, RAM, discos y más"
+                       Style="{StaticResource Body}" TextWrapping="Wrap"/>
+        </StackPanel>
+
+        <!-- Loading -->
+        <Grid Grid.Row="2">
+            <StackPanel x:Name="LoadingPanel" VerticalAlignment="Center">
+                <ProgressBar x:Name="LoadingBar" IsIndeterminate="True"
+                             HorizontalAlignment="Center" Width="220"/>
+                <TextBlock x:Name="LoadingText" Text="Obteniendo información del sistema…"
+                           Style="{StaticResource Body}" HorizontalAlignment="Center" Margin="0,12,0,0"/>
+            </StackPanel>
+
+            <!-- Info grid (2 columns, no scroll) -->
+            <Grid x:Name="InfoPanel" Visibility="Collapsed">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="16"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="16"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="16"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- OS -->
+                <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource Card}" Margin="0" VerticalAlignment="Stretch">
+                    <StackPanel>
+                        <TextBlock Text="&#xE7F4;  Sistema operativo" Style="{StaticResource H3}" Margin="0,0,0,6"/>
+                        <TextBlock x:Name="OsText" Style="{StaticResource Body}" TextWrapping="Wrap"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- CPU -->
+                <Border Grid.Row="0" Grid.Column="2" Style="{StaticResource Card}" Margin="0" VerticalAlignment="Stretch">
+                    <StackPanel>
+                        <TextBlock Text="&#xE950;  Procesador" Style="{StaticResource H3}" Margin="0,0,0,6"/>
+                        <TextBlock x:Name="CpuText" Style="{StaticResource Body}" TextWrapping="Wrap"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- RAM -->
+                <Border Grid.Row="2" Grid.Column="0" Style="{StaticResource Card}" Margin="0" VerticalAlignment="Stretch">
+                    <StackPanel>
+                        <TextBlock Text="&#xE964;  Memoria RAM" Style="{StaticResource H3}" Margin="0,0,0,6"/>
+                        <TextBlock x:Name="RamText" Style="{StaticResource Body}"/>
+                        <ProgressBar x:Name="RamBar" Height="8" Margin="0,8,0,0" Maximum="100"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- GPU -->
+                <Border Grid.Row="2" Grid.Column="2" Style="{StaticResource Card}" Margin="0" VerticalAlignment="Stretch">
+                    <StackPanel>
+                        <TextBlock Text="&#xE714;  Tarjeta gráfica" Style="{StaticResource H3}" Margin="0,0,0,6"/>
+                        <TextBlock x:Name="GpuText" Style="{StaticResource Body}" TextWrapping="Wrap"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Disks -->
+                <Border Grid.Row="4" Grid.Column="0" Style="{StaticResource Card}" Margin="0" VerticalAlignment="Stretch">
+                    <StackPanel>
+                        <TextBlock Text="&#xE959;  Discos" Style="{StaticResource H3}" Margin="0,0,0,6"/>
+                        <StackPanel x:Name="DisksPanel"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Battery + System -->
+                <Border Grid.Row="4" Grid.Column="2" Style="{StaticResource Card}" Margin="0" VerticalAlignment="Stretch">
+                    <StackPanel>
+                        <Border x:Name="BatteryCard" Visibility="Collapsed" Margin="0,0,0,14">
+                            <StackPanel>
+                                <TextBlock Text="&#xE83F;  Batería" Style="{StaticResource H3}" Margin="0,0,0,6"/>
+                                <TextBlock x:Name="BatteryText" Style="{StaticResource Body}"/>
+                            </StackPanel>
+                        </Border>
+                        <TextBlock Text="&#xE770;  Placa y BIOS" Style="{StaticResource H3}" Margin="0,0,0,6"/>
+                        <TextBlock x:Name="SysText" Style="{StaticResource Body}" TextWrapping="Wrap"/>
+                        <Button Content="&#xE8C8;  Copiar informe" Style="{StaticResource SecondaryButton}"
+                                Click="OnCopyReport" Margin="0,12,0,0" HorizontalAlignment="Left"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

@@ -1,0 +1,150 @@
+<UserControl x:Class="Wachin.Views.OverviewView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:Wachin.ViewModels">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="32,24">
+        <StackPanel x:Name="RootPanel" MaxWidth="980" HorizontalAlignment="Center">
+
+            <!-- HERO -->
+            <Border Style="{StaticResource CardNeon}" Padding="28,26">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <!-- Eyebrow tag: estado del sistema -->
+                        <Border HorizontalAlignment="Left" CornerRadius="999" Padding="12,4"
+                                Background="{DynamicResource SuccessSoft}" Margin="0,0,0,12">
+                            <StackPanel Orientation="Horizontal">
+                                <Ellipse Width="7" Height="7" Fill="{DynamicResource Success}" Margin="0,0,7,0"
+                                         VerticalAlignment="Center"/>
+                                <TextBlock Text="Exclui la App en Configuración para que la bostita del defender no te joda con falsos positivos." Style="{StaticResource Eyebrow}"
+                                           Foreground="{DynamicResource Success}"/>
+                            </StackPanel>
+                        </Border>
+                        <TextBlock Text="Bienvenido" Style="{StaticResource H1}" Margin="0,0,0,8"/>
+                        <TextBlock Text="Optimiza tu PC: acelerá el rendimiento, protegé tu privacidad y eliminá lo que no usás."
+                                   Style="{StaticResource Body}" TextWrapping="Wrap"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="20,0,0,0">
+                        <TextBlock x:Name="AdminStatus" FontSize="11.5" Style="{StaticResource Caption}"
+                                   HorizontalAlignment="Right" Text="VERIFICANDO..."/>
+                        <Border Height="1" Width="140" Margin="0,6,0,0" HorizontalAlignment="Right"
+                                Background="{DynamicResource Divider}"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- LIVE HUD STATS STRIP -->
+            <Grid Margin="0,16,0,16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="12"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="12"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="12"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <!-- RAM -->
+                <Border Grid.Column="0" Style="{StaticResource Card}" Margin="0">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                            <TextBlock Text="RAM" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock x:Name="HudRamPct" Text="--%" FontSize="16" FontWeight="Bold"
+                                       Foreground="{DynamicResource TextPrimary}" Margin="8,0,0,0"/>
+                        </StackPanel>
+                        <ProgressBar x:Name="HudRamBar" Height="5" Minimum="0" Maximum="100" Value="0"
+                                     Foreground="{DynamicResource Accent}" Background="{DynamicResource BgChip}"/>
+                        <TextBlock x:Name="HudRamDetail" Text="--" FontSize="9.5" Foreground="{DynamicResource TextMuted}"
+                                   Margin="0,4,0,0"/>
+                    </StackPanel>
+                </Border>
+                <!-- CPU: solo muestra el nombre del procesador (los demas datos
+                     ya los muestra Info del sistema) -->
+                <Border Grid.Column="2" Style="{StaticResource Card}" Margin="0">
+                    <StackPanel>
+                        <TextBlock Text="CPU" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource Secondary}"
+                                   Margin="0,0,0,4"/>
+                        <TextBlock x:Name="HudCpuName" Text="--" FontSize="12" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource TextPrimary}" TextWrapping="Wrap"
+                                   Margin="0,2,0,4"/>
+                        <TextBlock Text="PROCESADOR" FontSize="9.5" Foreground="{DynamicResource TextMuted}"/>
+                    </StackPanel>
+                </Border>
+                <!-- UPTIME -->
+                <Border Grid.Column="4" Style="{StaticResource Card}" Margin="0">
+                    <StackPanel>
+                        <TextBlock Text="ACTIVO" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource Magenta}"
+                                   Margin="0,0,0,4"/>
+                        <TextBlock x:Name="HudUptime" Text="--" FontSize="16" FontWeight="Bold"
+                                   Foreground="{DynamicResource TextPrimary}"/>
+                        <TextBlock x:Name="HudDate" Text="--" FontSize="9.5" Foreground="{DynamicResource TextMuted}"
+                                   Margin="0,4,0,0"/>
+                    </StackPanel>
+                </Border>
+                <!-- CLOCK -->
+                <Border Grid.Column="6" Style="{StaticResource Card}" Margin="0">
+                    <StackPanel>
+                        <TextBlock Text="HORA" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource Accent}"
+                                   Margin="0,0,0,4"/>
+                        <TextBlock x:Name="HudClock" Text="--:--:--" FontSize="16" FontWeight="Bold"
+                                   Foreground="{DynamicResource TextPrimary}"/>
+                        <TextBlock Text="SISTEMA LOCAL" FontSize="9.5" Foreground="{DynamicResource TextMuted}"
+                                   Margin="0,4,0,0"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <!-- Quick actions -->
+            <TextBlock Text="ACCIONES RAPIDAS" Style="{StaticResource NavHeader}" Margin="4,0,0,8" Opacity="0.9"/>
+            <WrapPanel Margin="0,0,0,16">
+                <Button Content="Crear punto de restauracion" Style="{StaticResource PrimaryButton}"
+                        Command="{Binding CreateRestorePointCommand}" Margin="0,0,10,10"/>
+                <Button Content="Abrir limpiador" Style="{StaticResource SecondaryButton}"
+                        Click="OnOpenCleaner" Margin="0,0,10,10"/>
+                <Button Content="Reiniciar Explorador" Style="{StaticResource SecondaryButton}"
+                        Command="{Binding RestartExplorerCommand}" Margin="0,0,10,10"/>
+            </WrapPanel>
+
+            <!-- Safety tips -->
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                        <Border Width="4" Height="16" CornerRadius="2" Background="{DynamicResource Accent}"
+                                VerticalAlignment="Center" Margin="0,0,10,0"/>
+                        <TextBlock Text="PROTOCOLO DE SEGURIDAD" Style="{StaticResource H3}" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <TextBlock Text="- Crea siempre un punto de restauracion antes de aplicar cambios.
+- Cada ajuste muestra su nivel de riesgo (bajo, medio, alto).
+- Podes deshacer cualquier ajuste desde la categoria correspondiente.
+- Si algo sale mal, restaura el equipo desde el punto que creaste."
+                               Style="{StaticResource Body}" TextWrapping="Wrap" LineHeight="22"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Applied tweaks summary -->
+            <Border Style="{StaticResource Card}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="8"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="12"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0" Orientation="Horizontal">
+                        <Border Width="4" Height="16" CornerRadius="2" Background="{DynamicResource Secondary}"
+                                VerticalAlignment="Center" Margin="0,0,10,0"/>
+                        <TextBlock Text="AJUSTES APLICADOS" Style="{StaticResource H3}" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <TextBlock x:Name="AppliedSummary" Grid.Row="2" Style="{StaticResource Body}" TextWrapping="Wrap"/>
+                    <Button Grid.Row="4" x:Name="UndoAllBtn" Content="Deshacer todos los ajustes"
+                            Style="{StaticResource DangerButton}" Click="OnUndoAll" Visibility="Collapsed"/>
+                </Grid>
+            </Border>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

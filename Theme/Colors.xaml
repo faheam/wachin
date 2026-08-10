@@ -1,0 +1,160 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- ===================== TEMA SEELEN / FLUENT DARK =====================
+         Estilo Seelen UI (Fluent moderno):
+         - Fondos oscuros profundos y mates (#0F0F12)
+         - Superficies ligeramente contrastadas (#1A1A1F)
+         - Acento violeta sutil #8B5CF6 + cyan #22D3EE (secundario)
+         - Tipografia Segoe UI Variable, jerarquia clara
+         - Sin glows ni neon: bordes sutiles + sombras planas suaves
+    ============================================================================== -->
+
+    <!-- ===== Colores (para ColorAnimation fluido en hovers) ===== -->
+    <Color x:Key="BgAppColor">#0F0F12</Color>
+    <Color x:Key="BgCardColor">#1A1A1F</Color>
+    <Color x:Key="BgCardHoverColor">#222229</Color>
+    <Color x:Key="AccentColor">#8B5CF6</Color>
+    <Color x:Key="AccentHoverColor">#A78BFA</Color>
+    <Color x:Key="AccentPressedColor">#7C3AED</Color>
+    <Color x:Key="DangerColor">#F87171</Color>
+    <Color x:Key="DangerHoverColor">#EF4444</Color>
+    <Color x:Key="BorderDefaultColor">#2C2C36</Color>
+    <Color x:Key="BorderStrongColor">#3D3D4A</Color>
+
+    <!-- ===== Fondos — oscuros mates ===== -->
+    <SolidColorBrush x:Key="BgApp" Color="#0F0F12" />
+    <SolidColorBrush x:Key="BgTitlebar" Color="#141419" />
+    <SolidColorBrush x:Key="BgSidebar" Color="#131318" />
+    <SolidColorBrush x:Key="BgCard" Color="#1A1A1F" />
+    <SolidColorBrush x:Key="BgCardHover" Color="#222229" />
+    <SolidColorBrush x:Key="BgInput" Color="#0D0D10" />
+    <SolidColorBrush x:Key="BgChip" Color="#26262E" />
+    <SolidColorBrush x:Key="BgOverlay" Color="#99000000" />
+
+    <!-- Superficies glass dedicadas (mantener claves) -->
+    <SolidColorBrush x:Key="GlassPanel" Color="#1A1A1F" />
+    <SolidColorBrush x:Key="GlassTopBar" Color="#141419" />
+
+    <!-- Gradientes de superficie (plano, leve relieve superior) -->
+    <LinearGradientBrush x:Key="GlassCardBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#202027" Offset="0" />
+        <GradientStop Color="#18181D" Offset="1" />
+    </LinearGradientBrush>
+    <!-- Superficie de tarjeta al hacer hover: un paso mas clara + leve tinte violeta -->
+    <LinearGradientBrush x:Key="GlassCardHoverBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#24242D" Offset="0" />
+        <GradientStop Color="#1D1D24" Offset="1" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="GlassSidebarBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#17171C" Offset="0" />
+        <GradientStop Color="#111114" Offset="1" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="GlassContentBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#131318" Offset="0" />
+        <GradientStop Color="#101014" Offset="1" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="GlassHudBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#1D1D24" Offset="0" />
+        <GradientStop Color="#17171C" Offset="1" />
+    </LinearGradientBrush>
+
+    <!-- ===== Bordes — sutiles ===== -->
+    <SolidColorBrush x:Key="BorderDefault" Color="#2C2C36" />
+    <SolidColorBrush x:Key="BorderStrong" Color="#3D3D4A" />
+    <SolidColorBrush x:Key="BorderSubtle" Color="#24242C" />
+    <SolidColorBrush x:Key="BorderNeon" Color="#8B5CF6" />
+    <SolidColorBrush x:Key="BorderGlass" Color="#2C2C36" />
+    <SolidColorBrush x:Key="BorderGlassStrong" Color="#3D3D4A" />
+
+    <!-- ===== Texto — escala gris clara ===== -->
+    <SolidColorBrush x:Key="TextPrimary" Color="#F2F3F5" />
+    <SolidColorBrush x:Key="TextSecondary" Color="#9BA1AC" />
+    <SolidColorBrush x:Key="TextMuted" Color="#6E7480" />
+    <SolidColorBrush x:Key="TextOnAccent" Color="#FFFFFF" />
+
+    <!-- ===== Acento — Violeta ===== -->
+    <SolidColorBrush x:Key="Accent" Color="#8B5CF6" />
+    <SolidColorBrush x:Key="AccentHover" Color="#A78BFA" />
+    <SolidColorBrush x:Key="AccentPressed" Color="#7C3AED" />
+    <SolidColorBrush x:Key="AccentSoft" Color="#241B3E" />
+    <SolidColorBrush x:Key="AccentSofter" Color="#1A142C" />
+    <LinearGradientBrush x:Key="AccentGradient" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#8B5CF6" Offset="0" />
+        <GradientStop Color="#A78BFA" Offset="1" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="AccentGradientSoft" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#1E1B2E" Offset="0" />
+        <GradientStop Color="#17162A" Offset="1" />
+    </LinearGradientBrush>
+
+    <!-- ===== Secundario — Cyan ===== -->
+    <SolidColorBrush x:Key="Secondary" Color="#22D3EE" />
+    <SolidColorBrush x:Key="SecondaryHover" Color="#67E8F9" />
+    <SolidColorBrush x:Key="SecondarySoft" Color="#0F2E36" />
+
+    <!-- ===== Magenta — rosa suave (uso moderado) ===== -->
+    <SolidColorBrush x:Key="Magenta" Color="#F472B6" />
+    <SolidColorBrush x:Key="MagentaHover" Color="#F9A8D4" />
+    <SolidColorBrush x:Key="MagentaSoft" Color="#331A2E" />
+
+    <!-- ===== Riesgo ===== -->
+    <SolidColorBrush x:Key="RiskLow" Color="#4ADE80" />
+    <SolidColorBrush x:Key="RiskLowSoft" Color="#12281C" />
+    <SolidColorBrush x:Key="RiskMedium" Color="#FBBF24" />
+    <SolidColorBrush x:Key="RiskMediumSoft" Color="#2A2111" />
+    <SolidColorBrush x:Key="RiskHigh" Color="#F87171" />
+    <SolidColorBrush x:Key="RiskHighSoft" Color="#2E1518" />
+
+    <!-- ===== Estados ===== -->
+    <SolidColorBrush x:Key="Success" Color="#4ADE80" />
+    <SolidColorBrush x:Key="SuccessSoft" Color="#12281C" />
+    <SolidColorBrush x:Key="Info" Color="#22D3EE" />
+    <SolidColorBrush x:Key="InfoSoft" Color="#0F2E36" />
+    <SolidColorBrush x:Key="Danger" Color="#F87171" />
+    <SolidColorBrush x:Key="DangerHover" Color="#EF4444" />
+    <SolidColorBrush x:Key="DangerSoft" Color="#2E1518" />
+
+    <!-- ===== Toasts — fondos solidos oscuros ===== -->
+    <SolidColorBrush x:Key="ToastSuccessBg" Color="#16281D" />
+    <SolidColorBrush x:Key="ToastErrorBg" Color="#2E1718" />
+    <SolidColorBrush x:Key="ToastWarningBg" Color="#2E2512" />
+    <SolidColorBrush x:Key="ToastInfoBg" Color="#12232B" />
+
+    <!-- ===== Sombras y glows (suaves, planos) ===== -->
+    <Color x:Key="GlowBlack">#000000</Color>
+    <Color x:Key="GlowAccent">#338B5CF6</Color>
+    <Color x:Key="GlowViolet">#33A78BFA</Color>
+    <Color x:Key="GlowMagenta">#2AF472B6</Color>
+    <Color x:Key="GlowSubtle">#228B5CF6</Color>
+    <Color x:Key="GlowRed">#44F87171</Color>
+    <Color x:Key="GlowGreen">#444ADE80</Color>
+
+    <!-- ===== Varios ===== -->
+    <SolidColorBrush x:Key="ScrollThumb" Color="#3A3A46" />
+    <SolidColorBrush x:Key="ScrollThumbHover" Color="#4E4E5C" />
+    <SolidColorBrush x:Key="Divider" Color="#24242C" />
+    <SolidColorBrush x:Key="ToastBg" Color="#1A1A1F" />
+
+    <!-- Chips gris crema (tarjetas de automatizacion) -->
+    <SolidColorBrush x:Key="CreamChip" Color="#E2DCD1" />
+    <SolidColorBrush x:Key="CreamChipText" Color="#332E26" />
+
+    <!-- Superficies -->
+    <SolidColorBrush x:Key="Surface0" Color="#0F0F12" />
+    <SolidColorBrush x:Key="Surface1" Color="#1A1A1F" />
+    <SolidColorBrush x:Key="Surface2" Color="#131318" />
+
+    <!-- Lineas decorativas (mantener claves por compatibilidad) -->
+    <LinearGradientBrush x:Key="NeonLine" StartPoint="0,0" EndPoint="1,0">
+        <GradientStop Color="#008B5CF6" Offset="0" />
+        <GradientStop Color="#338B5CF6" Offset="0.5" />
+        <GradientStop Color="#008B5CF6" Offset="1" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="NeonLineViolet" StartPoint="0,0" EndPoint="1,0">
+        <GradientStop Color="#00A78BFA" Offset="0" />
+        <GradientStop Color="#2EA78BFA" Offset="0.5" />
+        <GradientStop Color="#00A78BFA" Offset="1" />
+    </LinearGradientBrush>
+
+</ResourceDictionary>
