@@ -68,46 +68,7 @@ El resultado es un único `Wachin.exe` (~90 MB) que funciona sin instalar nada y
 
 ---
 
-## ✍️ Firma de código (menos falsos positivos)
 
-Los antivirus y SmartScreen desconfían de los EXE **sin firma** o recién publicados. Firmar el `Wachin.exe` con un certificado de código **Authenticode** no elimina los falsos positivos por completo, pero reduce muchísimo los avisos:
-
-- Windows muestra el **nombre del editor verificado** (desaparece el "Unknown Publisher") en UAC y en las propiedades del archivo.
-- SmartScreen y Defender usan la firma como señal de confianza: un EXE firmado con buena reputación deja de dar avisos con el tiempo.
-
-> 💡 **Importante:** la firma **no** es un pase automático. SmartScreen construye la reputación con las descargas y ejecuciones exitosas; un EXE recién firmado puede mostrar el aviso azul las primeras veces hasta que acumula reputación.
-
-### Tipos de certificado
-
-| Tipo | Costo aprox. | ¿Sirve? |
-|---|---|---|
-| **Auto-firmado** (`New-SelfSignedCertificate`) | Gratis | ❌ Solo pruebas locales. No reduce falsos positivos. |
-| **OV — Organization Validation** | ~US$100–300/año | ✅ Recomendado. Verifica la identidad de la organización. |
-| **EV — Extended Validation** | ~US$300–700/año | ✅ Máxima confianza. Ya no saltea SmartScreen, pero mejora la reputación y cumple políticas empresariales. |
-
-### Opciones baratas o gratis (open source)
-- **SignPath Foundation** — firma gratuita para proyectos open source que cumplan sus requisitos, vía un pipeline de build seguro.
-- **Certum (plan Open Source)** — certificado para desarrolladores individuales de OSS con clave en la nube (sin token USB). El editor aparece como "Open Source Developer, [tu nombre]" y no puede usarse en software comercial.
-- **Azure Trusted Signing** — ~US$9.99/mes. Firma sin hardware, integrado con GitHub Actions y Azure DevOps.
-
-### Cómo firmar el EXE (signtool)
-
-Con el certificado instalado o como archivo `.pfx`, desde un **Developer Command Prompt**:
-
-```bat
-signtool sign /fd SHA256 /tr http://timestamp.digicert.com /td SHA256 /a /f cert.pfx /p TU_CLAVE publish\win-x64\Wachin.exe
-```
-
-- `/fd SHA256` y `/td SHA256`: firman con SHA-256, que es lo que exige Windows moderno.
-- `/tr` + `/td`: timestamp **RFC 3161**. Firmá siempre con timestamp para que la firma siga válida aunque el certificado venza.
-- Verificá el resultado con: `signtool verify /pa /v publish\win-x64\Wachin.exe`
-
-### Buenas prácticas
-- Firmá **siempre el EXE publicado final** (el de un solo archivo), no los binarios de desarrollo.
-- Usá **el mismo certificado** en todas las versiones: la reputación de SmartScreen se acumula sobre la firma.
-- Mientras tanto, los usuarios pueden usar *Configuración → Antivirus y falsos positivos* para excluir Wachin de Microsoft Defender con un clic.
-
----
 
 ## 📁 Estructura del proyecto
 
