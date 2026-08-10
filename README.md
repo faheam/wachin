@@ -51,7 +51,7 @@ dotnet publish -c Release -r win-x64 --self-contained true \
 
 También puedes hacer doble clic en **`publish.bat`**.
 
-El resultado es un único `Wachin.exe` (~90 MB) que funciona sin instalar nada y se puede llevar en un USB. El estado de los ajustes se guarda junto al EXE si la carpeta es escribible; si no, en `%LocalAppData%\Wachin`.
+
 
 > 💡 Ejecuta `Wachin.exe` como administrador (el propio programa te lo pedirá con UAC).
 
@@ -90,4 +90,4 @@ MIT — úsalo, modifícalo y compártelo libremente. Consulta [LICENSE](LICENSE
 
 ---
 
-*Hecho con ❤️ para que tu PC se sienta nuevo otra vez.*
+
