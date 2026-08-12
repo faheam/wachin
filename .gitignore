@@ -10,3 +10,7 @@ publish/
 screenshot*.png
 tools/*.ps1
 !tools/make_icon.ps1
+wachin.txt
+AGENTES_LEER.txt
+WACHIN-DOCUMENTATION.doc
+

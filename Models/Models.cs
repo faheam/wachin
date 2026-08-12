@@ -154,6 +154,26 @@ public sealed class BloatApp
     public string? Publisher { get; set; }
 }
 
+// ─── Programas (repo de apps esenciales) ───────────────────────────────────
+
+public sealed class ProgramItem
+{
+    public string Id { get; init; } = "";
+    public string Name { get; init; } = "";
+    public string Category { get; init; } = "";
+    public string Description { get; init; } = "";
+    /// <summary>ID oficial en winget. Si es null, se usa DownloadUrl o se abre la web oficial.</summary>
+    public string? WingetId { get; init; }
+    /// <summary>URL oficial directa del instalador (para apps sin winget).</summary>
+    public string? DownloadUrl { get; init; }
+    /// <summary>Argumentos de instalación silenciosa para DownloadUrl.</summary>
+    public string? InstallArgs { get; init; }
+    /// <summary>Página oficial del programa.</summary>
+    public string? Homepage { get; init; }
+    /// <summary>Tamaño estimado en MB (0 = desconocido).</summary>
+    public long SizeMb { get; init; }
+}
+
 public sealed class CleanerCategory
 {
     public string Id { get; init; } = "";

@@ -1,3 +1,4 @@
+using System.IO;
 using System.Text.RegularExpressions;
 using Microsoft.Win32;
 using Wachin.Models;
@@ -1027,6 +1028,118 @@ public static class TweakCatalog
                 {
                     new() { Hive = "HKLM", Path = @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tree\Microsoft\Windows\Application Experience\Microsoft Compatibility Appraiser", Name = "Id", DeleteValue = true },
                     new() { Hive = "HKLM", Path = @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tree\Microsoft\Windows\Application Experience\ProgramDataUpdater", Name = "Id", DeleteValue = true }
+                }
+            },
+            new()
+            {
+                Id = "priv-onedrive-remove",
+                Category = TweakCategory.Privacy,
+                Title = "Eliminar OneDrive",
+                Description = "Desinstala OneDrive por completo: cierra sus procesos, ejecuta el desinstalador oficial, quita su icono del Explorador y sus accesos de inicio. Tus archivos en la nube no se borran, siguen en onedrive.com. Requiere reiniciar el equipo para terminar.",
+                Risk = RiskLevel.High,
+                NeedsRestart = true,
+                CustomApply = ctx =>
+                {
+                    string localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+                    string perUserFolder = Path.Combine(localAppData, @"Microsoft\OneDrive");
+
+                    // ¿Está instalado el cliente de OneDrive? (OneDrive.exe o su desinstalador por usuario)
+                    bool ClientFilesPresent() =>
+                        File.Exists(Path.Combine(perUserFolder, "OneDrive.exe")) ||
+                        File.Exists(Path.Combine(perUserFolder, "OneDriveSetup.exe"));
+
+                    bool clientInstalled = ClientFilesPresent();
+
+                    // 1) Localizar el desinstalador oficial de OneDrive
+                    string winDir = Environment.GetFolderPath(Environment.SpecialFolder.Windows);
+                    string progFiles = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
+                    string progFilesX86 = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86);
+                    string[] candidates =
+                    {
+                        Path.Combine(perUserFolder, "OneDriveSetup.exe"),
+                        Path.Combine(winDir, @"SysWOW64\OneDriveSetup.exe"),
+                        Path.Combine(winDir, @"System32\OneDriveSetup.exe"),
+                        Path.Combine(progFiles, @"Microsoft OneDrive\OneDriveSetup.exe"),
+                        Path.Combine(progFilesX86, @"Microsoft OneDrive\OneDriveSetup.exe")
+                    };
+                    string? setup = candidates.FirstOrDefault(File.Exists);
+
+                    if (clientInstalled && setup == null)
+                        return (false, "OneDrive está instalado pero no se encontró su desinstalador.");
+
+                    // 2) Cerrar los procesos de OneDrive
+                    foreach (var name in new[] { "OneDrive", "FileCoAuth" })
+                    {
+                        foreach (var p in System.Diagnostics.Process.GetProcessesByName(name))
+                            p.Kill();
+                    }
+
+                    // 3) Ejecutar el desinstalador oficial (solo si el cliente está presente)
+                    int code = 0;
+                    bool uninstallerRan = false;
+                    if (clientInstalled)
+                    {
+                        uninstallerRan = true;
+                        (code, _, _) = ProcessRunner.Run(setup!, "/uninstall", 90_000);
+                        // El desinstalador puede terminar en segundo plano; darle unos segundos
+                        Thread.Sleep(3000);
+                        clientInstalled = ClientFilesPresent();
+                    }
+
+                    // 4) Quitar el paquete Appx de OneDrive (Windows 11) si existiera
+                    ProcessRunner.Run("powershell.exe",
+                        "-NoProfile -NonInteractive -Command \"Get-AppxPackage -Name 'Microsoft.OneDriveSync' -AllUsers | Remove-AppxPackage -AllUsers -ErrorAction SilentlyContinue\"",
+                        30_000);
+
+                    // 5) Si el desinstalador falló y el cliente sigue instalado, no tocar el registro
+                    //    (así los datos para deshacer se guardan intactos si el usuario reintenta).
+                    if (uninstallerRan && code != 0 && clientInstalled)
+                        return (false, $"El desinstalador de OneDrive no pudo completarse (código {code}). Probá ejecutar Wachin como administrador.");
+
+                    // 6) Quitar el icono de OneDrive del Explorador
+                    const string clsid = @"Software\Classes\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}";
+                    if (RegistryOps.KeyExists("HKCU", clsid))
+                        RegistryOps.DeleteKey("HKCU", clsid);
+
+                    // 7) Quitar OneDrive de los programas de inicio (guardando el estado previo)
+                    var (runVal, runKind, runExists) = RegistryOps.Read("HKCU", @"Software\Microsoft\Windows\CurrentVersion\Run", "OneDrive");
+                    if (runExists)
+                    {
+                        ctx.CustomData["runValue"] = Convert.ToString(runVal) ?? "";
+                        ctx.CustomData["runKind"] = runKind.ToString();
+                        RegistryOps.DeleteValue("HKCU", @"Software\Microsoft\Windows\CurrentVersion\Run", "OneDrive");
+                    }
+                    var (apprVal, _, apprExists) = RegistryOps.Read("HKCU", @"Software\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run", "OneDrive");
+                    if (apprExists && apprVal is byte[] apprBytes)
+                    {
+                        ctx.CustomData["apprValue"] = Convert.ToBase64String(apprBytes);
+                        RegistryOps.DeleteValue("HKCU", @"Software\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run", "OneDrive");
+                    }
+
+                    string msg;
+                    if (!uninstallerRan)
+                        msg = "OneDrive no estaba instalado. Se eliminaron sus accesos de inicio y del Explorador que habían quedado.";
+                    else if (code == 0)
+                        msg = "OneDrive desinstalado. Se quitaron su icono del Explorador y sus accesos de inicio. Reiniciá el equipo para terminar el proceso.";
+                    else
+                        msg = "OneDrive ya no está instalado. Se eliminaron sus accesos de inicio y del Explorador que habían quedado.";
+                    return (true, msg);
+                },
+                CustomUndo = ctx =>
+                {
+                    // Restaurar los accesos de inicio que existían antes
+                    if (ctx.CustomData.TryGetValue("runValue", out var run) && run.Length > 0)
+                    {
+                        var kind = ctx.CustomData.TryGetValue("runKind", out var k) &&
+                                   Enum.TryParse<RegistryValueKind>(k, out var parsed) ? parsed : RegistryValueKind.String;
+                        RegistryOps.Write("HKCU", @"Software\Microsoft\Windows\CurrentVersion\Run", "OneDrive", run, kind);
+                    }
+                    if (ctx.CustomData.TryGetValue("apprValue", out var appr) && appr.Length > 0)
+                    {
+                        RegistryOps.Write("HKCU", @"Software\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run", "OneDrive",
+                            Convert.FromBase64String(appr), RegistryValueKind.Binary);
+                    }
+                    return (true, "Accesos de inicio restaurados. OneDrive no se reinstala automáticamente: descargalo desde https://www.microsoft.com/onedrive");
                 }
             },
 

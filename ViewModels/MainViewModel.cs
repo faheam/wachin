@@ -66,6 +66,8 @@ public sealed class MainViewModel : INotifyPropertyChanged
         NavItems.Add(new NavItemVm { Id = "updates", Title = "Windows Update", Glyph = "\uE777" });
         NavItems.Add(new NavItemVm { Id = "automation", Title = "Automatización", Glyph = "\uE9D5" });
         NavItems.Add(new NavItemVm { Id = "notebook", Title = "Notebook", Glyph = "\uE850" });
+        NavItems.Add(new NavItemVm { Id = "prog-head", Title = "PROGRAMAS", IsHeader = true });
+        NavItems.Add(new NavItemVm { Id = "programs", Title = "Programas", Glyph = "\uE896" });
         NavItems.Add(new NavItemVm { Id = "settings-head", Title = "", IsHeader = true });
         NavItems.Add(new NavItemVm { Id = "settings", Title = "Configuración", Glyph = "\uE713" });
     }
@@ -148,6 +150,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
             "updates" => ("Windows Update", "Actualizaciones y reparación del sistema"),
             "automation" => ("Automatización", "Scripts de mantenimiento y limpieza"),
             "notebook" => ("Notebook", "Control de temperatura del procesador"),
+            "programs" => ("Programas", "Las apps esenciales, instaladas con un clic"),
             "settings" => ("Configuración", "Ajustes y sobre Wachin"),
             _ => (SelectedNav.Title, "")
         };
@@ -178,6 +181,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
             "updates" => new Views.WindowsUpdateView(),
             "automation" => new Views.AutomationView(),
             "notebook" => new Views.NotebookView(),
+            "programs" => new Views.ProgramsView(),
             "settings" => new Views.SettingsView(),
             _ => new Views.OverviewView(this)
         };
