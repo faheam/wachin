@@ -934,9 +934,28 @@ public static class TweakCatalog
                 Title = "Desactivar desfragmentación automática",
                 Description = "Impide que Windows desfragmente los discos automáticamente. Útil si quieres controlar cuándo se ejecuta.",
                 Risk = RiskLevel.Low,
-                Changes = new()
+                CustomApply = ctx =>
                 {
-                    new() { Hive = "HKLM", Path = @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tree\Microsoft\Windows\Defrag", Name = "Id", DeleteValue = true }
+                    const string task = @"\Microsoft\Windows\Defrag\ScheduledDefrag";
+                    bool? enabled = ScheduledTaskService.GetEnabledState(task);
+                    if (enabled == null)
+                        return (true, "No se encontró la tarea de desfragmentación automática.");
+                    if (enabled == false)
+                        return (true, "La desfragmentación automática ya estaba desactivada.");
+
+                    var (ok, msg) = ScheduledTaskService.SetEnabled(task, false);
+                    if (!ok) return (false, msg);
+
+                    ctx.CustomData["disabledTask"] = task;
+                    return (true, "Desfragmentación automática desactivada.");
+                },
+                CustomUndo = ctx =>
+                {
+                    if (!ctx.CustomData.TryGetValue("disabledTask", out var task) || string.IsNullOrWhiteSpace(task))
+                        return (false, "No hay datos guardados para deshacer.");
+
+                    var (ok, msg) = ScheduledTaskService.SetEnabled(task, true);
+                    return ok ? (true, "Desfragmentación automática reactivada.") : (false, msg);
                 }
             },
 
@@ -1024,10 +1043,56 @@ public static class TweakCatalog
                 Title = "Desactivar tareas programadas de telemetría",
                 Description = "Detiene las tareas programadas que recopilan y envían datos de diagnóstico a Microsoft.",
                 Risk = RiskLevel.Medium,
-                Changes = new()
+                CustomApply = ctx =>
                 {
-                    new() { Hive = "HKLM", Path = @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tree\Microsoft\Windows\Application Experience\Microsoft Compatibility Appraiser", Name = "Id", DeleteValue = true },
-                    new() { Hive = "HKLM", Path = @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tree\Microsoft\Windows\Application Experience\ProgramDataUpdater", Name = "Id", DeleteValue = true }
+                    string[] knownTasks =
+                    {
+                        @"\Microsoft\Windows\Application Experience\Microsoft Compatibility Appraiser",
+                        @"\Microsoft\Windows\Application Experience\Microsoft Compatibility Appraiser Exp",
+                        @"\Microsoft\Windows\Application Experience\ProgramDataUpdater",
+                        @"\Microsoft\Windows\Customer Experience Improvement Program\Consolidator",
+                        @"\Microsoft\Windows\Customer Experience Improvement Program\UsbCeip"
+                    };
+
+                    var disabled = new List<string>();
+                    var errors = new List<string>();
+
+                    foreach (var path in knownTasks)
+                    {
+                        bool? enabled = ScheduledTaskService.GetEnabledState(path);
+                        if (enabled == null || enabled == false) continue; // no existe o ya está desactivada
+
+                        var (ok, msg) = ScheduledTaskService.SetEnabled(path, false);
+                        if (ok) disabled.Add(path);
+                        else errors.Add($"{path}: {msg}");
+                    }
+
+                    if (errors.Count > 0)
+                        return (false, $"Se desactivaron {disabled.Count} tarea(s), pero hubo errores: {string.Join(" | ", errors)}");
+
+                    if (disabled.Count == 0)
+                        return (true, "No se encontraron tareas de telemetría activas.");
+
+                    ctx.CustomData["disabledTasks"] = System.Text.Json.JsonSerializer.Serialize(disabled);
+                    return (true, $"Se desactivaron {disabled.Count} tareas de telemetría.");
+                },
+                CustomUndo = ctx =>
+                {
+                    if (!ctx.CustomData.TryGetValue("disabledTasks", out var json) || string.IsNullOrWhiteSpace(json))
+                        return (false, "No hay datos guardados para deshacer.");
+
+                    var tasks = System.Text.Json.JsonSerializer.Deserialize<List<string>>(json) ?? new();
+                    var errors = new List<string>();
+                    foreach (var path in tasks)
+                    {
+                        var (ok, msg) = ScheduledTaskService.SetEnabled(path, true);
+                        if (!ok) errors.Add($"{path}: {msg}");
+                    }
+
+                    if (errors.Count > 0)
+                        return (false, $"Se reactivaron {tasks.Count - errors.Count} de {tasks.Count} tarea(s): {string.Join(" | ", errors)}");
+
+                    return (true, $"Se reactivaron {tasks.Count} tareas de telemetría.");
                 }
             },
             new()

@@ -35,6 +35,35 @@ public static class ScheduledTaskService
         return (false, $"No se pudo cambiar la tarea: {msg}");
     }
 
+    /// <summary>
+    /// Estado actual de una tarea por su ruta. Devuelve true si existe y está activa,
+    /// false si existe y está desactivada, o null si no existe / no se puede consultar.
+    /// </summary>
+    public static bool? GetEnabledState(string taskPath)
+    {
+        try
+        {
+            Type? svcType = Type.GetTypeFromProgID("Schedule.Service");
+            if (svcType == null) return null;
+
+            dynamic svc = Activator.CreateInstance(svcType);
+            svc.Connect();
+
+            string p = taskPath.TrimStart('\\');
+            int idx = p.LastIndexOf('\\');
+            string folderPath = idx >= 0 ? "\\" + p[..idx] : "\\";
+            string name = idx >= 0 ? p[(idx + 1)..] : p;
+
+            dynamic folder = svc.GetFolder(folderPath);
+            dynamic task = folder.GetTask(name);
+            return (bool)task.Enabled;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
     // ── Internals ──
 
     private static void TraverseFolder(dynamic folder, List<SchedTaskItem> result)
